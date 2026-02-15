@@ -1,0 +1,25 @@
+ALEX DEVELOPER
+City, State — 555-0123 — alex.dev@email.com — linkedin.com/in/alexdev — github.com/alexdev
+SUMMARY
+Results-oriented Software Engineer with 4 years of experience building scalable web applications. Proficient in
+Python, Java, and Cloud Infrastructure. Passionate about automating workflows and optimizing data pipelines.
+TECHNICAL SKILLS
+• Languages: Python, SQL, Java, JavaScript, C++
+• Frameworks/Tools: Django, Flask, React, Docker, Kubernetes, Git
+• Cloud: AWS (EC2, S3, Lambda), Azure, Google Cloud Platform
+EXPERIENCE
+Tech Solutions Inc. New York, NY
+Senior Software Engineer Jan 2021 – Present
+• Developed a data processing engine in Python that reduced latency by 40%.
+• Managed cloud migration of legacy services to AWS using Docker containers.
+• Collaborated with cross-functional teams to deploy features reaching 1M+ users.
+Innovate Data Corp San Francisco, CA
+Junior Developer June 2018 – Dec 2020
+• Automated daily reporting tasks using Python scripts, saving 10 hours of manual work weekly.
+• Optimized SQL queries which improved database performance by 25%.
+PROJECTS
+AI Resume Screener — Python, NLTK, Flask
+• Built an NLP-based tool to extract and clean text from resumes for skill matching.
+EDUCATION
+University of Technology 2018
+Bachelor of Science in Computer Science GPA: 3.8/4.0
