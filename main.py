@@ -16,3 +16,15 @@ if __name__ == "__main__":
     result = processor.preprocess(sample)
     print("Processed text:")
     print(result)
+
+from src.ner_extractor import SkillExtractor
+if __name__ == "__main__":
+    text = """
+    Experienced Software Engineer skilled in Python, AWS, and Docker.
+    """
+
+    extractor = SkillExtractor()
+    result = extractor.extract_entities(text)
+
+    print(result)
+

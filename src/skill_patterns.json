@@ -1,0 +1,9 @@
+[
+    {"label": "SKILL", "pattern": "Python"},
+    {"label": "SKILL", "pattern": "AWS"},
+    {"label": "SKILL", "pattern": "SQL"},
+    {"label": "SKILL", "pattern": "Machine Learning"},
+    {"label": "SKILL", "pattern": "Docker"},
+    {"label": "ROLE", "pattern": "Software Engineer"},
+    {"label": "ROLE", "pattern": "Data Scientist"}
+]
