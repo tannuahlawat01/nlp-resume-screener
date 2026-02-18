@@ -28,3 +28,16 @@ if __name__ == "__main__":
 
     print(result)
 
+from src.embedding import SemanticMatcher
+
+if __name__ == "__main__":
+    resume = """
+    Python developer with AWS experience building ML systems.
+    """
+    job = """
+    Looking for software engineer skilled in Python and cloud computing.
+    """
+    matcher = SemanticMatcher()
+    score = matcher.similarity(resume, job)
+    print("\nSemantic similarity score:")
+    print(score)
