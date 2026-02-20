@@ -68,3 +68,21 @@ def process_folder(folder_path):
 
         save_text(file, text)
         print(f"Processed: {file}")
+
+import io
+def extract_text_from_pdf(uploaded_file):
+    """
+    Used by Streamlit UI.
+    Accepts uploaded PDF file object instead of file path.
+    """
+    text = ""
+    try:
+        with pdfplumber.open(io.BytesIO(uploaded_file.read())) as pdf:
+            for page in pdf.pages:
+                page_text = page.extract_text()
+                if page_text:
+                    text += page_text + "\n"
+
+    except Exception as e:
+        print(f"[UPLOAD PDF ERROR]: {e}")
+    return text
