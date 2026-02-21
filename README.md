@@ -171,14 +171,6 @@ nlp-resume-screener/
 
 ---
 
-## 📸 Demo Screenshot (Optional)
-
-> Streamlit dashboard displaying ranked resumes with semantic match scores.
-
-(Add your dashboard screenshot here for portfolio presentation.)
-
----
-
 ## 👩‍💻 Author
 
 Built as an end-to-end NLP project demonstrating semantic resume matching and recruiter workflow automation.
