@@ -3,3 +3,7 @@ python-docx
 spacy
 sentence-transformers
 scikit-learn
+pandas
+numpy
+rapidfuzz
+streamlit
