@@ -1,0 +1,58 @@
+[
+  {
+    "JD":"JD_001",
+    "SBERT P@1":1.0,
+    "TFIDF P@1":0.0,
+    "SBERT P@2":1.0,
+    "TFIDF P@2":1.0,
+    "SBERT MRR":1.0,
+    "TFIDF MRR":0.5,
+    "SBERT NDCG@3":1.0,
+    "TFIDF NDCG@3":0.7288368793,
+    "SBERT Top-1":"R1",
+    "TFIDF Top-1":"R3",
+    "Ground Truth":"R1"
+  },
+  {
+    "JD":"JD_002",
+    "SBERT P@1":1.0,
+    "TFIDF P@1":1.0,
+    "SBERT P@2":1.0,
+    "TFIDF P@2":1.0,
+    "SBERT MRR":1.0,
+    "TFIDF MRR":1.0,
+    "SBERT NDCG@3":0.9810048228,
+    "TFIDF NDCG@3":1.0,
+    "SBERT Top-1":"R5",
+    "TFIDF Top-1":"R5",
+    "Ground Truth":"R5"
+  },
+  {
+    "JD":"JD_003",
+    "SBERT P@1":1.0,
+    "TFIDF P@1":1.0,
+    "SBERT P@2":1.0,
+    "TFIDF P@2":1.0,
+    "SBERT MRR":1.0,
+    "TFIDF MRR":1.0,
+    "SBERT NDCG@3":1.0,
+    "TFIDF NDCG@3":1.0,
+    "SBERT Top-1":"R9",
+    "TFIDF Top-1":"R9",
+    "Ground Truth":"R9"
+  },
+  {
+    "JD":"AVERAGE",
+    "SBERT P@1":1.0,
+    "TFIDF P@1":0.6666666667,
+    "SBERT P@2":1.0,
+    "TFIDF P@2":1.0,
+    "SBERT MRR":1.0,
+    "TFIDF MRR":0.8333333333,
+    "SBERT NDCG@3":0.9936682743,
+    "TFIDF NDCG@3":0.9096122931,
+    "SBERT Top-1":"-",
+    "TFIDF Top-1":"-",
+    "Ground Truth":"-"
+  }
+]
