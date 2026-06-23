@@ -1,77 +1,97 @@
-# NLP Resume Screener — Semantic Candidate Matching Engine
+# 📄 NLP Resume Screener
 
-An intelligent NLP-powered resume screening system that extracts text from resumes, preprocesses content, identifies technical skills, generates semantic embeddings, and ranks candidates against a job description using cosine similarity.
+An intelligent resume screening system that ranks candidates against a job description using **Sentence-BERT semantic matching** — not just keyword overlap. Produces a multi-factor **ATS Score (0–100)** with explainable skill breakdowns and resume improvement tips.
 
-This project demonstrates real-world NLP pipeline engineering, clean architecture principles, and ML-driven semantic matching — designed to simulate a recruiter workflow.
-
----
-
-## 🚀 Features
-
-* 📄 Resume text extraction from PDF and DOCX files
-* 🧹 NLP preprocessing (cleaning, normalization, lemmatization)
-* 🧠 Skill & role extraction using Named Entity Recognition
-* 🔍 Semantic embedding with Sentence-BERT
-* 📊 Cosine similarity ranking engine
-* 🌐 Streamlit recruiter dashboard
-* 🧱 Clean modular architecture
+🔗 **[Live Demo](https://nlp-resume-screener-ifk6k3gdaaxp6rvc3neipo.streamlit.app)**  
+📁 **[GitHub](https://github.com/tannuahlawat01/nlp-resume-screener)**
 
 ---
 
-## 🧠 Architecture Overview
+## 📊 Evaluation Results
 
-The system follows clean architecture principles to ensure modularity, maintainability, and scalability.
+| Metric | SBERT | TF-IDF | Improvement |
+|--------|-------|--------|-------------|
+| Precision@1 | **100%** | 66.7% | +33.3% |
+| MRR | **1.000** | 0.833 | +0.167 |
+| NDCG@3 | **0.994** | 0.910 | +0.084 |
+
+Evaluated on 3 labeled JD-resume benchmark pairs (12 resumes total).  
+SBERT correctly ranked the most relevant resume #1 in all 3 cases.  
+TF-IDF failed on JD_001 — matched a Java engineer to a Python backend role due to surface keyword overlap (PostgreSQL, REST API appeared in both).
+
+---
+
+## 🧠 How It Works
+
+### Multi-Factor ATS Score (100 points)
+
+| Factor | Weight | Signal |
+|--------|--------|--------|
+| Skill Match | 40 pts | JD skills found in resume |
+| Semantic Relevance | 25 pts | SBERT cosine similarity (rescaled) |
+| Experience Relevance | 20 pts | Skills found in Experience/Projects sections |
+| Resume Structure | 10 pts | Key sections present (Experience, Skills, Education, Projects) |
+| Keyword Coverage | 5 pts | TF-IDF overlap score (rescaled) |
+
+**Why these weights?** Skill match dominates (40%) as the most direct signal. Experience relevance (20%) uses the section parser to distinguish demonstrated skill usage from listed keywords — a skill in Experience is stronger evidence than the same skill in a Skills section. This mirrors how real ATS systems weight candidates.
+
+### Preprocessing Strategy
+Two modes — not one:
+- **`clean_only`** for SBERT: preserves natural language structure. SBERT is a transformer trained on full sentences — lemmatization destroys the contextual signals it relies on.
+- **`full`** for TF-IDF: lemmatize + remove stopwords. TF-IDF is bag-of-words, so lemmatization reduces sparsity.
+
+### Skill Extraction
+- 174-pattern spaCy EntityRuler taxonomy across 7 categories (languages, frameworks, ML/AI, cloud, DevOps, databases, tools)
+- rapidfuzz fallback for variant normalization: `Postgres → PostgreSQL`, `ReactJS → React`, `K8s → Kubernetes`
+- Two-layer pipeline: exact EntityRuler match first, fuzzy match for anything missed
+
+---
+
+## ✨ Features
+
+- **Candidate Leaderboard** — ranked table with ATS Score, Grade, Skill Match %
+- **Explainable Skill Breakdown** — matched vs missing skills, with the resume section each skill was found in (`Python \`Experience\``)
+- **Resume Section Parser** — detects Experience, Education, Skills, Projects, Internship, Certifications, Summary, Research sections
+- **Improvement Suggestions** — skill-specific actionable advice for each missing JD skill
+- **Section Tips** — flags skills only in Skills section, not demonstrated in Experience
+- **Download ATS Report** — full plain-text analysis report per candidate
+- **Model Comparison Chart** — live benchmark of SBERT vs TF-IDF in sidebar
+
+---
+
+## 🏗 Architecture
 
 ```
-UI Layer (Streamlit Dashboard)
-        ↓
-Ranking Engine (Business Logic)
-        ↓
-Semantic Embeddings
-        ↓
-NLP Pipeline (Cleaning + NER)
-        ↓
-Resume Extraction Layer
+app.py  (Streamlit UI)
+    │
+    ├── src/ats_scorer.py        # Multi-factor ATS scoring (5 signals)
+    ├── src/ranking_engine.py    # Hybrid ranking (SBERT + TF-IDF)
+    ├── src/embedding.py         # Sentence-BERT embeddings
+    ├── src/tfidf_matcher.py     # TF-IDF baseline matcher
+    ├── src/ner_extractor.py     # Skill extraction + fuzzy normalization
+    ├── src/section_parser.py    # Resume section detection
+    ├── src/preprocessing.py     # Dual-mode preprocessor
+    ├── src/extractor.py         # PDF text extraction
+    └── src/skill_patterns.json  # 174-pattern skill taxonomy
+    │
+    └── evaluation/
+        ├── evaluate.py          # SBERT vs TF-IDF benchmark harness
+        ├── labeled_dataset.py   # 3 JDs × 4 resumes labeled dataset
+        └── results/
+            └── eval_results.json
 ```
-
-Each layer is independent and testable. Business logic is separated from UI, allowing easy upgrades or replacement of components.
 
 ---
 
 ## 📦 Installation
 
-### 1. Clone the repository
-
-```
-git clone <your-repository-url>
+```bash
+git clone https://github.com/tannuahlawat01/nlp-resume-screener.git
 cd nlp-resume-screener
-```
-
-### 2. Create a virtual environment (recommended)
-
-Windows:
-
-```
 python -m venv venv
-venv\Scripts\activate
-```
-
-Mac/Linux:
-
-```
-python3 -m venv venv
-source venv/bin/activate
-```
-
-### 3. Install dependencies
-
-```
+venv\Scripts\activate        # Windows
+source venv/bin/activate     # Mac/Linux
 pip install -r requirements.txt
-```
-
-### 4. Download spaCy language model
-
-```
 python -m spacy download en_core_web_sm
 ```
 
@@ -79,110 +99,59 @@ python -m spacy download en_core_web_sm
 
 ## ▶ Usage
 
-### Run CLI pipeline demo
-
-Processes resumes and demonstrates extraction → preprocessing → NER → embeddings → ranking.
-
-```
-python main.py
-```
-
----
-
-### Launch recruiter dashboard
-
-Upload resumes, paste a job description, and view ranked candidates.
-
-```
+### Run the app locally
+```bash
 streamlit run app.py
 ```
 
----
-
-## 📊 How Matching Works
-
-1. Resume text and job description are converted into semantic embeddings
-2. Cosine similarity measures semantic closeness
-3. Scores are normalized into match percentages
-4. Candidates are ranked and displayed
-
-This allows meaning-based comparison instead of simple keyword matching.
-
----
-
-## 📁 Project Structure
-
-```
-nlp-resume-screener/
-│
-├── app.py                  # Streamlit dashboard (UI layer)
-├── main.py                 # CLI pipeline demo
-│
-├── data/
-│   └── resumes/            # Input resume files
-│
-├── outputs/
-│   └── extracted_texts/    # Saved processed text
-│
-├── src/
-│   ├── extractor.py        # Resume file parsing
-│   ├── preprocessing.py    # NLP cleaning pipeline
-│   ├── ner_extractor.py    # Skill/entity detection
-│   ├── embedding.py        # Semantic vectorization
-│   ├── ranking_engine.py   # Matching & scoring logic
-│   └── __init__.py
-│
-├── requirements.txt
-└── README.md
+### Run evaluation benchmark
+```bash
+python -m evaluation.evaluate
 ```
 
 ---
 
-## 🛠 Technologies Used
+## 🛠 Tech Stack
 
-* Python
-* spaCy NLP
-* Sentence-BERT embeddings
-* Scikit-learn similarity engine
-* Pandas data processing
-* Streamlit dashboard
-* pdfplumber & python-docx extraction
-
----
-
-## 🎯 Learning Outcomes
-
-* NLP pipeline design
-* Semantic search & embeddings
-* Clean architecture practices
-* Modular ML system design
-* Practical recruiter workflow simulation
+| Component | Technology |
+|-----------|------------|
+| Semantic Matching | Sentence-BERT (`all-MiniLM-L6-v2`) |
+| Skill Extraction | spaCy EntityRuler + rapidfuzz |
+| Baseline Model | TF-IDF + cosine similarity |
+| NLP Preprocessing | spaCy, regex |
+| PDF Extraction | pdfplumber |
+| Frontend | Streamlit |
+| Deployment | Streamlit Community Cloud |
 
 ---
 
-## 🔮 Future Improvements
+## 📉 Known Limitations
 
-* Skill weighting & scoring customization
-* Multi-job comparison engine
-* Resume summarization
-* REST API integration
-* Cloud deployment
-* Recruiter analytics dashboard
+**1. Semantic synonyms across domains**  
+"ML Engineer" and "AI Developer" are semantically similar but the skill taxonomy treats them as different roles. A resume using non-standard terminology may score lower despite being relevant.
+
+**2. Scanned PDF resumes**  
+pdfplumber extracts text from digital PDFs only. Scanned/image-based PDFs produce empty text and are skipped. OCR support would be needed for these.
+
+**3. Small evaluation benchmark**  
+The labeled dataset has 3 JDs and 12 resumes — sufficient to demonstrate SBERT's advantage over TF-IDF, but not large enough for statistically robust conclusions. A production system would need 50+ labeled pairs.
+
+**4. ATS weight calibration**  
+The 5-factor weights (40/25/20/10/5) are based on documented reasoning but not empirically optimized. A larger labeled dataset would allow weight tuning via grid search or learned ranking.
+
+---
+
+## 🔮 Planned Improvements
+
+- Section-weighted scoring (skill in Experience > skill in Skills section)
+- Weight optimization via ablation study on expanded labeled dataset
+- Support for DOCX resume uploads
+- REST API wrapper for integration with HR tools
 
 ---
 
 ## 👩‍💻 Author
 
-Built as an end-to-end NLP project demonstrating semantic resume matching and recruiter workflow automation.
-
----
-
-## ⭐ Support
-
-If you found this project useful:
-
-* Star the repository
-* Share feedback
-* Connect for collaboration
-
----
+**Tannu Ahlawat**  
+B.Tech AI & ML, IGDTUW Delhi (2028)  
+GitHub: [@tannuahlawat01](https://github.com/tannuahlawat01)
